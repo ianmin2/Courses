@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>SIMPLE PHP API TEST</title>
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script>
+		$(function(){
+			console.log("Jquery Successfuly initialized!");
+
+			//$.getJSON("http://127.0.0.1/courses/php/api_process.php?method=getAllUsers&jsoncallback=?",
+			$.getJSON("http://api.netii.net/api/api_process.php?method=getAllUsers&jsoncallback=?",
+				function(d){
+					console.log(d);
+				});
+		});
+	</script>
+</head>
+<body>
+
+</body>
+
+</html>
