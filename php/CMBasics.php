@@ -142,7 +142,7 @@ class CMBasics{
 //FETCH A LIST OF ALL STUDENTS BY MAJOR IN AN INSTITUTION
 	function getStudentByMajor($major, $institution){
 		
-		$this->connection->printQueryResults("SELECT * FROM student WHERE stud_major='$major' AND stud_inst='$institution'",true);
+		$this->connection->printQueryResults("SELECT * FROM students WHERE stud_major='$major' AND stud_inst='$institution'",true);
 		
 	}
 	
@@ -150,7 +150,7 @@ class CMBasics{
 //FETCH A LIST OF ALL STUDENTS BY DEPARTMENT IN AN INSTITUTION
 	function getStudentByDepartment($department, $institution){
 		
-		$this->connection->printQueryResults("SELECT * FROM student WHERE stud_dept='$department' AND stud_inst='$institution'",true);
+		$this->connection->printQueryResults("SELECT * FROM students WHERE stud_dept='$department' AND stud_inst='$institution'",true);
 		
 	}
 	
@@ -158,7 +158,7 @@ class CMBasics{
 //FETCH A LIST OF ALL STUDENTS BY SCHOOL IN AN INSTITUTION
 	function getStudentBySchool($school, $institution){
 		
-		$this->connection->printQueryResults("SELECT * FROM student WHERE stud_school='$school' AND stud_inst='$institution'",true);
+		$this->connection->printQueryResults("SELECT * FROM students WHERE stud_school='$school' AND stud_inst='$institution'",true);
 		
 	}
 	
@@ -166,7 +166,7 @@ class CMBasics{
 //FETCH A LIST OF ALL STUDENTS BY INSTITUTION IN A COUNTRY
 	function getStudentByInstitution($institution, $country){
 		 
-		$this->connection->printQueryResults("SELECT * FROM student WHERE stud_inst='$institution' AND stud_country='$country'",true);
+		$this->connection->printQueryResults("SELECT * FROM students WHERE stud_inst='$institution' AND stud_country='$country'",true);
 		
 	}
 	
@@ -190,6 +190,68 @@ class CMBasics{
 		
 	}
 
+/****************************************************************************************************************************************/
+//LOGING IN A USER
+
+	function doPasskeyLogin( $identification, $passkey, $loginKey ){
+		
+		//Check if a user with the given username and password exists
+		$this->connection->num_rows("SELECT * FROM students WHERE stud_identification='$identification' AND stud_passkey='$passkey' ",true);
+		$numTimes = $_SESSION['num_rows'];
+		
+		//If the user exists, set the required credentials
+		if($numTimes == 1){
+			
+			$respArray = array( "response" => "SUCCESS", "data" => array("message" => "Successfully Authenticated!", "command" => "localStorage.setItem('identification', '".$identification."'); localStorage.setItem('loginKey', '".$loginKey."'); doBasicLoginAuth();"));
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
+		}else{
+			
+			//Check if the given username exists
+			$this->connection->num_rows("SELECT * FROM students WHERE stud_identification='$identification'", true);
+			$numTimes = $_SESSION['num_rows'];
+			
+			//If the username exists,
+			if($numTimes == 1){
+				
+				$respArray = array("response" => "You have entered an incorrect password!", "data" => "");
+				//Inform them that the password they provided is wrong
+				echo $this->jsoncallback."(".json_encode($respArray).")";
+				
+			}else{
+				
+				$respArray = array("response" => "That identification number is not yet registered!", "data" => "");
+				//Inform them that that username remains unregistered
+				echo $this->jsoncallback."(".json_encode($respArray).")";
+				
+			}
+			
+			
+		}
+		
+		
+	}
+
+
+
+/****************************************************************************************************************************************/
+//CHECK IF THE USER TOKEN IS VALID
+
+	function doSecureAuth( $loginKey, $identification ){
+	
+		if( $loginKey === $identification){
+			
+			$respArray = array("response"=>"SUCCESS", "data" => array("message" => "AUTHENTICATED", "command" => "") );				
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
+		}else{
+			
+			$respArray = array("response"=>"ERROR", "data" => array("message" => "NO MATCH", "command" => "localStorage.clear(); window.location = 'index.html';") );
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
+		}
+		
+	}
 
 /****************************************************************************************************************************************/
 //CUSTOM DEVELOPER TESTING FEATURE
@@ -198,6 +260,8 @@ class CMBasics{
 		
 		
 	}
+	
+	
 
 }
 

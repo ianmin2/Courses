@@ -14,7 +14,7 @@ if(@$_REQUEST['email'] != ""){
 
 
 include "CMBasics_proc_validate.php";
-$basicVal = new CMBasicsValidation(@$_REQUEST['id'], @$_REQUEST['nom'], @$_REQUEST['country'], @$_REQUEST['institution'], @$_REQUEST['school'], @$_REQUEST['department'], @$_REQUEST['major'], @$_REQUEST['minor'], @$_REQUEST['student'], @$_REQUEST['identification'], @$_REQUEST['passkey'], @$_REQUEST['email'], @$_REQUEST['google'], @$_REQUEST['yahoo'], @$_REQUEST['live'], @$_REQUEST['facebook'], @$_REQUEST['linkedin'], @$_REQUEST['twitter'], @$_REQUEST['course'], @$_REQUEST['grade'], @$_REQUEST['aim'], @$_REQUEST['comment'], @$_REQUEST['dates'], @$_REQUEST['callback']);
+$basicVal = new CMBasicsValidation(@$_REQUEST['id'], @$_REQUEST['nom'], @$_REQUEST['country'], @$_REQUEST['institution'], @$_REQUEST['school'], @$_REQUEST['department'], @$_REQUEST['major'], @$_REQUEST['minor'], @$_REQUEST['student'], @$_REQUEST['identification'], @$_REQUEST['passkey'], @$_REQUEST['email'], @$_REQUEST['google'], @$_REQUEST['yahoo'], @$_REQUEST['live'], @$_REQUEST['facebook'], @$_REQUEST['linkedin'], @$_REQUEST['twitter'], @$_REQUEST['course'], @$_REQUEST['grade'], @$_REQUEST['aim'], @$_REQUEST['comment'], @$_REQUEST['dates'], @$_REQUEST['callback'], @$_REQUEST['loginKey']);
 
 if(@$funcName != ""){
 	
@@ -89,6 +89,16 @@ if(@$funcName != ""){
 		#//Custom developer feature tester
 		case "quackDev":
 			$basicVal->doQuackDev();
+		break;
+		
+		#//Perform a user login
+		case "doPasskeyLogin":
+			$basicVal->doPasskeyLoginValidate();
+		break;
+		
+		#//Perform a user login
+		case "doSecureAuth":
+			$basicVal->doSecureAuthValidate();
 		break;
 		
 		#//Handling the "method not found error"

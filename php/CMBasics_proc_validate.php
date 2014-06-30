@@ -1,11 +1,11 @@
 <?php
 class CMBasicsValidation{
 
-	public $id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email, $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $basics, $jsoncallback;
+	public $id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email, $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $basics, $jsoncallback , $loginKey;
 
-	private $obsfucate;
+	public $obsfucate;
 
-	public function __construct($id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email,  $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $jsoncallback){
+	public function __construct($id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email,  $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $jsoncallback, $loginKey ){
 
 		$this->id				= $id;
 		$this->nom 				= $nom;
@@ -15,9 +15,9 @@ class CMBasicsValidation{
 		$this->department		= $department;
 		$this->major			= $major;
 		$this->minor 			= $minor;
-		$this->identification	= $identification;
+		$this->identification	= strtoupper($identification);
 		$this->passkey 			= $passkey;
-		$this->email			= $email;
+		$this->email			= strtolower($email);
 		$this->google 			= $google;
 		$this->yahoo 			= $yahoo;
 		$this->live 			= $live;
@@ -31,12 +31,13 @@ class CMBasicsValidation{
 		$this->dates 			= $dates;
 		$this->student 			= $student;
 		$this->jsoncallback     = $jsoncallback;
-		
+		$this->loginKey			= $loginKey;
+				
 		include "CMBasics.php";
 		$this->basics = new CMBasics($jsoncallback);
 		
 		//INSTANTIATING THE OBSFUCATION CLASS 
-		if($passkey != ""){
+		if($passkey != "" | $loginKey != ""){
 			
 				if(@$this->identification == ""){
 					echo $this->jsoncallback."(".json_encode("You need to provide a username in order to gain access to the desired service!").")";
@@ -48,7 +49,7 @@ class CMBasicsValidation{
 			
 			//The obsfucation object
 			$this->obsfucate = new obsfucate($key, $sel);
-			
+						
 		}
 		
 		
@@ -278,6 +279,39 @@ class CMBasicsValidation{
 			$this->basics->updateProgress($this->sanitize($this->id), $this->sanitize($this->student), $this->sanitize($this->course), $this->sanitize($this->grade), $this->sanitize($this->aim), $this->sanitize($this->comment), $this->sanitize($this->dates));
 		}	
 		 
+	}
+	
+	
+	//Do a quick validation of the user
+	function doPasskeyLoginValidate(){
+		
+		if(@$this->identification == "" | @$this->passkey == ""){			
+			echo $this->jsoncallback."(".json_encode("Your Username and Password are required to complete this task.").")";
+		}else{
+			
+			$this->basics->doPasskeyLogin(@$this->sanitize($this->identification) , @$this->obsfucate->makePass($this->sanitize($this->passkey)), $this->obsfucate->makeKey($this->sanitize($this->identification)) );
+			
+		}
+		
+	}
+	
+	
+	//Do a user loginKey validation
+	
+	function doSecureAuthValidate(){
+	
+		if(	@$this->loginKey == "" || @$this->identification == ""){
+			
+			$respArray = array("response"=>"ERROR", "data" => array("message" => "You need to login to access this service ", "command" => "localStorage.clear(); window.location='index.html'; "));
+			
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
+		}else{
+			
+			$this->basics->doSecureAuth(@$this->loginKey, @$this->obsfucate->makeKey($this->sanitize( $this->identification )) );
+					
+		}
+		
 	}
 	
 	
