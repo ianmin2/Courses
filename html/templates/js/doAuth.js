@@ -14,16 +14,18 @@ $(function(){
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"mapMajor", institution:$_institution, major:$_major, course:$_course },
 						dataType:'jsonp',
-						success: function(mapDat){	
+						success: function(resp){	
 						
 							
 						
-							if(mapDat["response"] == "SUCCESS" ){
-								$("#result").html( mapDat['data']['message']);																
-							}else if(mapDat["response"] == "ERROR" ){
-								$("#result").html( mapDat["data"]["message"]);
+							if(resp["response"] == "SUCCESS" ){
+								$__result.html(resp['data']['message']);
+								$__command.html("<script>" + resp['data']['command'] + "<//script>");																
+							}else if(resp["response"] == "ERROR" ){
+								$__result.html(resp["data"]["message"]);
+								$__command.html("<script>" + resp['data']['command'] + "<//script>");
 							}else{
-								$("#result").html(mapDat);	
+								$__result.html("UNDEFINED RESPONSE MESSAGE.");
 							}
 								
 								
@@ -79,16 +81,16 @@ $(function(){
 							url : 'http://localhost/courses/php/CMBasics_proc.php',
 							data: { method:'doSecureAuth', loginKey : $__loginKey, identification : $__identification  },
 							dataType:'jsonp',
-							success: function(lresp){
+							success: function(resp){
 															
 								//If the user's credentials are correct, set a unique identification Key  to authenticate the user.					
-								if(lresp["response"] == "SUCCESS"){
+								if(resp["response"] == "SUCCESS"){
 										
-									$("#result").html( "<script>" + lresp["data"]["command"] );
+									$__command.html( "<script>" + resp["data"]["command"] + "<//script>" );
 																								
 								}else{
 									
-									$("#result").html( "<script>" + lresp["data"]["command"] );
+									$__command.html( "<script>" + resp["data"]["command"] + "<//script>" );
 									
 								}
 								

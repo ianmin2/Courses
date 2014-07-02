@@ -177,10 +177,10 @@
 														
 														if(resp["response"] == "SUCCESS"){
 								$__result.html(resp['data']['message']);
-								$__command.html("<script> " + resp['data']['command'] + "</script>");
+								$__command.html("<script> " + resp['data']['command'] + "<//script>");
 							}else if(resp["response"] == "ERROR"){
 								$__result.html(resp['data']['message']);
-								$__command.html("<script>" + resp['data']['command'] + "</script>");	}else{
+								$__command.html("<script>" + resp['data']['command'] + "<//script>");	}else{
 								$__result.html("UNDEFINED RESPONSE MESSAGE.");
 							}
 																					
