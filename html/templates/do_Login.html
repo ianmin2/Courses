@@ -6,6 +6,8 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/doAuth.js"></script>
 <script>
+	
+	doBasicLoginAuth();
 
 	$(function(){
 		
@@ -23,22 +25,24 @@
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"doPasskeyLogin", identification:$identification.val(), passkey:$passkey.val()  },
 						dataType:'jsonp',
-						success: function(logiDat){
+						success: function(resp){
 							
 							//If the user's credentials are correct, set a unique identification Key  to authenticate the user.					
-							if(logiDat["response"] == "SUCCESS"){
+							if(resp["response"] == "SUCCESS"){
 								$com = "";
 								//$("#result").html("<script>" + logiDat["data"]["command"] + "");
-								for( $command in logiDat["data"]["command"] ){
+								for( $command in resp["data"]["command"] ){
 									
-									$com = $com + " " + logiDat["data"]["command"][$command];
+									$com = $com + " " + resp["data"]["command"][$command];
 																		
 								}
-								$("#result").html("<script>" + $com + "");
+								
+								$__command.html("<script>" + $com + "<//script>");
 																						
 							}else{
 								
-								$("#result").html("<script>" + logiDat["data"]["command"] + "");
+								
+								$__command.html("<script>" + logiDat["data"]["command"] + "<//script>");
 								
 							}
 							
@@ -59,6 +63,7 @@
 </head>
 
 <body>
+<div id="command"></div>
 <div id="result"></div>
 <input type="text" id="identification" placeholder="identification number">
 <input type="password" placeholder="password" id="passkey">

@@ -55,11 +55,23 @@ if(@$id != ''){
 
 //If the page resource identifier is not provided
 }else{
-
-	echo $jsoncallback."(".json_encode("<center><h2><code style='color:#F00;'>Critical Error:</code><code style='color:green;'> Failed to recognize application!</code> </h2></center>").")"; 
+	
+	$respArray = makeResponse("ERROR", "Critical Error: Failed to recognize application!", "");
+	echo $jsoncallback."(".json_encode($respArray).")"; 
 	die;
 	
 }
+
+/*******************************************************
+	SIMPLE FUNCTIONS PLACED TO BE COPIED TO THE ACTUAL PAGES WHERE NEEDED
+*/
+
+function makeResponse($response, $message, $command){
+		
+		return array( "response" => $response, "data" => array( "message" => $message, "command" => $command ) );
+		
+}
+
 
 function sanitize($value){
 
@@ -72,5 +84,9 @@ function makeCookie($cname, $cval, $days){
 		$days = ($days * 24 * 60 * 60 * 1000);
 		@setcookie($cname,$cval,$days);
 }
+
+/******************************************************
+
+*/
 
 ?>

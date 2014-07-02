@@ -1,5 +1,7 @@
-	$__result = $("#result");
-
+$(function(){
+	$__result 			= $("#result");
+	$__command			= $("#command"); 	
+});
 
 
 	function mapMajor($_course){
@@ -109,7 +111,7 @@
 		
 			$identy = noSpace($data[$dat]['name'] + $data[$dat]['code']);
 			
-			$_out = $_out + " <tr id='" + $identy +"' > <td class='id'> " + noSpace($data[$dat]['id']) + "</td> <td class='code'> " +  noSpace($data[$dat]['code']) + "</td>  <td class='name'> " + noSpace($data[$dat]['name']) + "</td>  <td id='tick'> <input type='submit' onClick='javascript:mapMajor("+ $data[$dat]['id'] + ")' value='add' ></td></tr> <tr><td colspan='4'><hr></td></tr>";
+			$_out = $_out + " <tr id='" + $identy +"' > <td class='id'> " + $data[$dat]['id'] + "</td> <td class='code'> " +  $data[$dat]['code'] + "</td>  <td class='name'> " + $data[$dat]['name'] + "</td>  <td id='tick'> <input type='submit' onClick='javascript:mapMajor("+ $data[$dat]['id'] + ")' value='add' ></td></tr> <tr><td colspan='4'><hr></td></tr>";
 			
 		}
 		
@@ -158,7 +160,7 @@
 	
 	function addGrade($courseId){
 		
-		 $.ajax({
+		/* $.ajax({
 			 
 							url : 'http://localhost/courses/php/CMBasics_proc.php',
 							data: { method:'doSecureAuth', loginKey : $__loginKey, identification : $__identification  },
@@ -169,6 +171,7 @@
 							}
 							
 		 });
+		 */
 		
 	}
 		

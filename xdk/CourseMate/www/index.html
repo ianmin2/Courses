@@ -1,0 +1,79 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+<head>
+	<title>Your New Application</title>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+	<style type="text/css">
+		/* Prevent copy paste for all elements except text fields */
+		*  { -webkit-user-select:none; -webkit-tap-highlight-color:rgba(255, 255, 255, 0); }
+		input, textarea  { -webkit-user-select:text; }
+		body { background-color:white; color:black }
+	</style>
+	<script src='intelxdk.js'></script>
+	<script type="text/javascript">
+		/* Intel native bridge is available */
+		var onDeviceReady=function(){
+		//hide splash screen
+		intel.xdk.device.hideSplashScreen();
+		};
+		document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
+	</script>
+    <script src="js/jquery.min.js"></script>
+<script src="js/doAuth.js"></script>
+<script>
+
+	$(function(){
+		
+		$identification		=	$("#identification");
+		$passkey			=	$("#passkey");
+		
+		//Upon the clicking of the login button
+		$("#doLogin").click(function(e) {
+            	
+			//If the username and password are both provided,		
+			if($identification.val() != "" && $passkey.val() != ""){
+				
+				 $.ajax({
+				
+						url : 'http://localhost/courses/php/CMBasics_proc.php',
+						data: { method:"doPasskeyLogin", identification:$identification.val(), passkey:$passkey.val()  },
+						dataType:'jsonp',
+						success: function(logiDat){
+							
+							//If the user's credentials are correct, set a unique identification Key  to authenticate the user.					
+							if(logiDat["response"] == "SUCCESS"){
+								$com = "";
+								//$("#result").html("<script>" + logiDat["data"]["command"] + "");
+								for( $command in logiDat["data"]["command"] ){
+									
+									$com = $com + " " + logiDat["data"]["command"][$command];
+																		
+								}
+								$("#result").html("<script>" + $com + "");
+																						
+							}else{
+								
+								$("#result").html("<script>" + logiDat["data"]["command"] + "");
+								
+							}
+							
+							
+						}
+						
+				 });
+				
+			}else{
+				
+			}
+			
+        });
+		
+	});
+
+</script>
+</head>
+<body>
+	
+</body>
+</html>

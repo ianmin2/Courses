@@ -30,7 +30,7 @@ class CMBasics{
 
 	function addInstitution( $nom, $country){
 
-		$this->connection->aQuery("INSERT INTO institution (inst_name, inst_country) VALUES ('$nom','$country')", true, "Institution Successfully Added", "Failed to add institution!");
+		$this->connection->aQuery("INSERT INTO institution (inst_name, inst_country) VALUES ('$nom','$country')", false, "Institution Successfully Added", "Failed to add institution!<br>It already exists", "");
 		
 	}
 	
@@ -57,7 +57,7 @@ class CMBasics{
 
 	function addSchool( $nom, $institution){
 
-		$this->connection->aQuery("INSERT INTO school (scho_name, scho_inst) VALUES('$nom','$institution')",true,"School Successfully Added","Failed to add school!");
+		$this->connection->aQuery("INSERT INTO school (scho_name, scho_inst) VALUES('$nom','$institution')",false,"School Successfully Added","Failed to add school!<br>It already exists", "");
 		
 	}
 
@@ -77,7 +77,7 @@ class CMBasics{
 
 	function addDepartment( $nom, $school, $institution){
 
-		$this->connection->aQuery("INSERT INTO department (dept_name, dept_school, dept_inst) VALUES ('$nom', '$school', '$institution')",true,"Department Successfully Added","Failed to add department!");
+		$this->connection->aQuery("INSERT INTO department (dept_name, dept_school, dept_inst) VALUES ('$nom', '$school', '$institution')",false,"Department Successfully Added","Failed to add department!<br>It already exists", "");
 		
 	}
 	
@@ -98,7 +98,7 @@ class CMBasics{
 
 	function addMajor( $nom, $department, $institution){
 
-		$this->connection->aQuery("INSERT INTO majors (majr_name, majr_dept, majr_inst) VALUES ('$nom', '$department', '$institution')",true,"Major Successfully Added","Failed to add major!");
+		$this->connection->aQuery("INSERT INTO majors (majr_name, majr_dept, majr_inst) VALUES ('$nom', '$department', '$institution')",false,"Major Successfully Added","Failed to add major!<br>It already exists", "");
 		
 	}
 	
@@ -117,7 +117,7 @@ class CMBasics{
 
 	function addCourse( $nom, $department, $institution, $course){
 
-		$this->connection->aQuery("INSERT INTO courses (cour_name, cour_dept, cour_inst, cour_code) VALUES ('$nom', '$department', '$institution', '$course')",true,"Course Successfully Added","Failed to add course!");
+		$this->connection->aQuery("INSERT INTO courses (cour_name, cour_dept, cour_inst, cour_code) VALUES ('$nom', '$department', '$institution', '$course')",false,"Course Successfully Added","Failed to add course!<br>It already exists", "");
 			
 	}
 
@@ -125,7 +125,7 @@ class CMBasics{
 
 	function getInstCourses( $institution ){
 
-		$this->connection->query("SELECT * FROM courses WHERE cour_inst='$institution' ",true );
+		$this->connection->query("SELECT * FROM courses WHERE cour_inst='$institution' ",true);
 		$course_list = $_SESSION['query'];
 		
 		$courses = array();
@@ -139,7 +139,7 @@ class CMBasics{
 		}
 		
 		if(count($courses) > 0){
-			$respArray = $this->makeResponse("SUCCESS", "Course List successfully generated",  $courses );
+			$respArray = $this->makeResponse("SUCCESS", $courses , "" );
 			echo $this->jsoncallback."(".json_encode($respArray).")";
 		}else{
 			$respArray = $this->makeResponse("ERROR","There are no courses currently associated with your institution", "");
@@ -205,7 +205,7 @@ class CMBasics{
 
 	function addStudent( $nom, $institution, $major, $minor, $identification, $email, $passkey, $google, $yahoo, $live, $facebook, $linkedin, $twitter, $department, $school, $country){
 
-		$this->connection->aQuery("INSERT INTO students (stud_name, stud_inst, stud_major, stud_minor, stud_identification, stud_email, stud_passkey, stud_google, stud_yahoo, stud_live, stud_facebook, stud_linkedin, stud_twitter, stud_dept, stud_school, stud_country) VALUES ('$nom', '$institution', '$major', '$minor', '$identification', '$email', '$passkey', '$google', '$yahoo', '$live', '$facebook', '$linkedin', '$twitter', '$department', '$school', '$country' )",true,"Student Successfully Added","Failed to add Student!");
+		$this->connection->aQuery("INSERT INTO students (stud_name, stud_inst, stud_major, stud_minor, stud_identification, stud_email, stud_passkey, stud_google, stud_yahoo, stud_live, stud_facebook, stud_linkedin, stud_twitter, stud_dept, stud_school, stud_country) VALUES ('$nom', '$institution', '$major', '$minor', '$identification', '$email', '$passkey', '$google', '$yahoo', '$live', '$facebook', '$linkedin', '$twitter', '$department', '$school', '$country' )",false,"User Successfully Added","Failed to add user! <br> user already exists", "");
 		
 	}
 
@@ -213,7 +213,7 @@ class CMBasics{
 
 	function updateStudent( $nom, $institution, $major, $minor, $identification, $passkey, $google, $yahoo, $live, $facebook, $linkedin, $twitter, $department, $school, $country){
 
-		$this->connection->aQuery("UPDATE students set stud_name='$nom', stud_inst='$institution', stud_major='$major', stud_minor='$minor',  stud_google='$google', stud_yahoo='$yahoo', stud_live='$live', stud_facebook='$facebook', stud_linkedin='$linkedin', stud_twitter='$twitter', stud_dept='$department', stud_school='$school', stud_country='$country' WHERE stud_identification='$identification' AND stud_passkey='$passkey')",true, "Student  details Successfully Changed","Failed to change Student details!" );
+		$this->connection->aQuery("UPDATE students set stud_name='$nom', stud_inst='$institution', stud_major='$major', stud_minor='$minor',  stud_google='$google', stud_yahoo='$yahoo', stud_live='$live', stud_facebook='$facebook', stud_linkedin='$linkedin', stud_twitter='$twitter', stud_dept='$department', stud_school='$school', stud_country='$country' WHERE stud_identification='$identification' AND stud_passkey='$passkey')",false, "User details Successfully Changed","Failed to change user details!", "" );
 		
 	}
 
@@ -257,7 +257,7 @@ class CMBasics{
 
 		if($grade == ""){$grade = "NG";}if($aim == ""){$aim = "ND";}
 
-		$this->connection->aQuery("INSERT INTO progress (prog_student, prog_course, prog_grade, prog_aim, prog_comment, prog_date) VALUES ('$student', '$course', '$grade', '$aim', '$comment', '$dates')",true,"Progress data Successfully added","Failed to add progress data!");
+		$this->connection->aQuery("INSERT INTO progress (prog_student, prog_course, prog_grade, prog_aim, prog_comment, prog_date) VALUES ('$student', '$course', '$grade', '$aim', '$comment', '$dates')",false,"Progress data Successfully added","Failed to add progress data!", "");
 		
 	}
 
@@ -265,7 +265,7 @@ class CMBasics{
 
 	function updateProgress( $id, $student, $course, $grade, $aim, $comment, $dates){
 
-		$this->connection->aQuery("UPDATE progress SET prog_course='$course', prog_grade='$grade', prog_aim='$aim', prog_comment='$comment', prog_date='$dates' WHERE id='$id' AND prog_student='$student'",true,"Student progress data Successfully updated","Failed to update Student progress data!");
+		$this->connection->aQuery("UPDATE progress SET prog_course='$course', prog_grade='$grade', prog_aim='$aim', prog_comment='$comment', prog_date='$dates' WHERE id='$id' AND prog_student='$student'",false,"Student progress data Successfully updated","Failed to update Student progress data!", "");
 		
 	}
 
@@ -281,7 +281,7 @@ class CMBasics{
 		//If the user exists, set the required credentials
 		if($numTimes == 1){
 			
-			$this->connection->query("SELECT * FROM students WHERE stud_identification='$identification' AND stud_passkey='$passkey' ",true);
+			$this->connection->query("SELECT * FROM students WHERE stud_identification='$identification' AND stud_passkey='$passkey' ", true);
 			$details = $_SESSION['query'];
 			
 			while($detail = mysqli_fetch_array($details)){
@@ -377,16 +377,9 @@ class CMBasics{
 //Map A major to a course	
 	function mapMajor( $institution, $major, $course ){
 		
-		$this->connection->query("INSERT INTO merger ( merg_inst, merg_maj, merg_course ) VALUES ( '$institution', '$major', '$course' )", true);
-		$result = $_SESSION['query'];
+		$this->connection->aQuery("INSERT INTO merger ( merg_inst, merg_maj, merg_course ) VALUES ( '$institution', '$major', '$course' )", false, "Course Successfully added!", "Failed to add course!<br>Course already exists! ", "");
 		
-		if($result){
-			$respArray = $this->makeResponse("SUCCESS"," Course Successfully added! "," ");
-			echo $this->jsoncallback."(".json_encode($respArray).")";
-		}else{
-			$respArray = $this->makeResponse("ERROR"," Failed to add course! "," ");
-			echo $this->jsoncallback."(".json_encode($respArray).")";
-		}
+		
 	}
 
 }

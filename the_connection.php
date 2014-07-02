@@ -23,7 +23,9 @@ class connection{
 			$this->db_connect();
 			
 		}else{
-			echo $this->jsoncallback."(".json_encode("<error><center><h2><code style='color:#F00;'>Critical Error:<code style='color:green;'> Could recognize database connection criteria!").")";
+			
+			$respArray = makeResponse( "ERROR", "Critical Error: Could recognize database connection criteria!" , "");
+			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			exit;
 		}
 	
@@ -36,9 +38,14 @@ class connection{
 		$this->con = mysqli_connect($this->db_host,$this->db_username,$this->db_passwd,$this->db_name);
 		
 		if (mysqli_connect_errno($this->con)){
-			echo $this->jsoncallback."(".json_encode("<error><center><h2><code style='color:#F00;'>Response: <code style='color:green;'>".mysqli_connect_error()).")";
+			
+			$respArray = makeResponse( "ERROR", "Response: ".mysqli_connect_error(), "");
+			echo  $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
+			
 		}
 	}
+	
 	
 	public function die_on_err($stops){
 		
@@ -46,11 +53,18 @@ class connection{
 			$_SESSION['query_error'] = array();
 			$_SESSION['query_error'][] = mysqli_error($this->con);
 			
-			echo $this->jsoncallback."(".json_encode("<error><center><h2><code style='color:#F00;'>CRITICAL ERROR: <code style='color:green;'> ".mysqli_error($this->con)).")";
+			$respArray = makeResponse( "ERROR", "CRITICAL ERROR: ".mysqli_error($this->con), "");
+			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			exit;
+			
 		}else{
 			
-			if(!isset($_SESSION['query_error'])){$_SESSION['query_error'] = array();} 
+			if(!isset($_SESSION['query_error'])){
+				
+				$_SESSION['query_error'] = array();
+				
+			} 
+			
 			$_SESSION['query_error'][] = mysqli_error($this->con);
 			
 		}
@@ -63,17 +77,20 @@ class connection{
 		
 	}
 	
-	public function aQuery($statement, $stops, $success, $failure){  
+	public function aQuery($statement, $stops, $success, $failure, $command ){  
 	
 		$_SESSION['query'] = mysqli_query($this->con,"$statement")or $this->die_on_err($stops);
 		
 		if($_SESSION['query']){
 			
-			echo  $this->jsoncallback."(".json_encode($success).")";
+			
+			$respArray = makeResponse( "SUCCESS", $success , $command);
+			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			
 		}else{
 			
-			echo  $this->jsoncallback."(".json_encode($failure).")";
+			$respArray = makeResponse( "ERROR", $failure , $command);
+			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			
 		} 
 		
@@ -99,7 +116,8 @@ class connection{
 			$elements[] = $element;
 		}
 		
-		echo $this->jsoncallback."(".json_encode($elements).")";
+		$respArray = makeResponse( "SUCCESS", $elements , "");
+		echo  $this->jsoncallback."(".json_encode($respArray).")";		
 		
 	}
 	
@@ -111,7 +129,7 @@ class connection{
 				
 				$err = $_SESSION['query_error'];
 				unset($_SESSION['query_error']); 
-				return  array("response" => "ERROR", "data" => array( "message" => '"'.$err.'"', "command" => "" ) );
+				return  makeResponse("ERROR", $err, "" );
 				
 			}else{
 				return; 

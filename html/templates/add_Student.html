@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Add Student</title>
 <script src="js/jquery.min.js"></script>
+<script src="js/doAuth.js"></script>
 <script>
 
 	$(function(){
@@ -22,18 +23,18 @@
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"getInstitution", country:$country.val() },
 						dataType:'jsonp',
-						success: function(ro){
+						success: function(resp){
 							
 							//STORE THE RESULTANT OBJECT WITHIN A VARIABLE						
-							$obj = ro; 
+							$inst_arr = resp['data']['message']; 
 							
 							
 							$ira = "<option value='' selected> Pick An Institution</option>";
 							
 							//MANIPULATE THE OBJECT TO POPULATE THE INSTITUTION SELECT BOX WITH THE RETREIVED INSTITUTION NAMES
-							for($oobj in $obj){
+							for($inst in $inst_arr){
 																
-								$ira += '<option value="'+ $obj[$oobj]["id"] +'">'+ $obj[$oobj]["inst_name"] +'</option>';
+								$ira += '<option value="'+ $inst_arr[$inst]["id"] +'">'+ $inst_arr[$inst]["inst_name"] +'</option>';
 								
 							}
 							
@@ -52,17 +53,17 @@
 													url : 'http://localhost/courses/php/CMBasics_proc.php',
 													data: { method:"getSchools", institution:$institution.val() },
 													dataType:'jsonp',
-													success: function(sch){
+													success: function(resp){
 														
-														$ools = sch;
+														$chool_arr = resp['data']['message'];
 														
 														
 														$ira = "<option value='' selected> Pick A School</option>";
 							
 														//MANIPULATE THE OBJECT TO POPULATE THE SCHOOL SELECT BOX WITH THE RETREIVED INSTITUTION NAMES
-														for($ool in $ools){
+														for($chool in $chool_arr){
 																							
-															$ira += '<option value="'+ $ools[$ool]["id"] +'">'+ $ools[$ool]["scho_name"] +'</option>';
+															$ira += '<option value="'+ $chool_arr[$chool]["id"] +'">'+ $chool_arr[$chool]["scho_name"] +'</option>';
 															
 														}
 														
@@ -81,17 +82,17 @@
 																	url : 'http://localhost/courses/php/CMBasics_proc.php',
 																	data: { method:"getDepartments", institution:$institution.val() , school: $school.val() },
 																	dataType:'jsonp',
-																	success: function(dep){
+																	success: function(resp){
 																		
-																		$pts = dep;
+																		$dept_arr = resp['data']['message'];
 																		
 																		
 																		$ira = "<option value='' selected> Pick A Department</option>";
 											
 																		//MANIPULATE THE OBJECT TO POPULATE THE Department SELECT BOX WITH THE RETREIVED INSTITUTION NAMES
-																		for($pt in $pts){
+																		for($dept in $dept_arr){
 																											
-																			$ira += '<option value="'+ $pts[$pt]["id"] +'">'+ $pts[$pt]["dept_name"] +'</option>';
+																			$ira += '<option value="'+ $dept_arr[$dept]["id"] +'">'+ $dept_arr[$dept]["dept_name"] +'</option>';
 																			
 																		}
 																		
@@ -111,17 +112,17 @@
 																	url : 'http://localhost/courses/php/CMBasics_proc.php',
 																	data: { method:"getMajors", institution:$institution.val() , department: $('#department').val() },
 																	dataType:'jsonp',
-																	success: function(maj){
+																	success: function(resp){
 																		
-																		$jrs = maj;
+																		$maj_arr = resp['data']['message'];
 																		
 																		
 																		$ira = "<option value='' selected> Pick A Major</option>";
 											
 																		//MANIPULATE THE OBJECT TO POPULATE THE Department SELECT BOX WITH THE RETREIVED INSTITUTION NAMES
-																		for($jr in $jrs){
+																		for($maj in $maj_arr){
 																											
-																			$ira += '<option value="'+ $jrs[$jr]["id"] +'">'+ $jrs[$jr]["majr_name"] +'</option>';
+																			$ira += '<option value="'+ $maj_arr[$maj]["id"] +'">'+ $maj_arr[$maj]["majr_name"] +'</option>';
 																			
 																		}
 																		
@@ -197,10 +198,18 @@
 													url : 'http://localhost/courses/php/CMBasics_proc.php',
 													data: { method:"addStudent", nom:$("#nom").val(), institution:$institution.val(), major: $("#major").val(), identification:$("#identification").val(), passkey:$("#passkey").val(), email:$("#emol").val(), department: $department.val(), school:$school.val(), country:$country.val() },
 													dataType:'jsonp',
-													success: function(pers){
+													success: function(resp){
 														
-														$("#result").html(pers);
-																					
+														if(resp["response"] == "SUCCESS"){
+															$__result.html(resp['data']['message']);
+															$__command.html("<script> " + resp['data']['command'] + "</script>");
+														}else if(resp["response"] == "ERROR"){
+															$__result.html(resp['data']['message']);
+															$__command.html("<script>" + resp['data']['command'] + "</script>");
+														}else{
+															$__result.html("UNDEFINED RESPONSE MESSAGE.");
+														}
+																												
 													}
 													
 												});
@@ -232,6 +241,7 @@ $("#nom").css("display","block");
 </head>
 
 <body>
+<div id="command"></div>
 <div id="result"></div>
 
 <select name="country" id="country">

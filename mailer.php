@@ -107,7 +107,8 @@ IARA_MAILER;
 			*/
 					 
 		}else{
-			echo $this->jsoncallback."(".json_encode('<error>ERROR: Failed to Initialize Mailer! ').")";
+			$respArray = makeResponse("ERROR", "ERROR: Failed to Initialize Mailer! ", "");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
 			exit;
 		}
 		
@@ -194,13 +195,23 @@ IARA_MAILER;
 		//$result = curl_exec($ch);
 		//echo $result;
 		if(curl_exec($ch)){
-			echo $this->jsoncallback."(".json_encode('<success>Message Sent').")";
+			$respArray = makeResponse("SUCCESS", "Message Sent", "");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
 		}else{
-			echo $this->jsoncallback."(".json_encode('<error>Error: Failed to sending message!').")";
+			$respArray = makeResponse("ERROR", "Error: Failed to sending message!", "");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
 		}
 				
 	}
 
+	//THE SIMPLE RESPONSE STANDARDING FUNCTION
+	function makeResponse($response, $message, $command){
+		
+		return array( "response" => $response, "data" => array( "message" => $message, "command" => $command ) );
+		
+	}
+		
+		
 		
 //End of class		
 }

@@ -20,16 +20,19 @@
 						
 								if(courDat["response"] == "ERROR"){
 									
+									$__result.html(courDat['data']['message']);
+									$__command.html(courDat['data']['command']);
+									
 								}else if(courDat["response"] == "SUCCESS"){
 									
-									$_courses = courDat["data"]["command"]
-									
-									
-										
+									$_courses = courDat["data"]["message"]
+																		
 									 $madeList = makeList($_courses);
 										$("#generated").html($madeList);
-										
+										$__command.html(courDat['data']['command']);
 									
+								}else{
+									$__result.html("UNDEFINED RESPONSE MESSAGE.");
 								}
 						
 						}
@@ -64,6 +67,7 @@
 </head>
 
 <body>
+<div id="command"></div>
 <div id="result"></div>
 	<table width="99%"  id="generated" >
       
