@@ -121,6 +121,85 @@ class CMBasics{
 			
 	}
 
+//GET A LIST OF COURSES OFFERED BY AN INSTITUTION
+
+	function getInstCourses( $institution ){
+
+		$this->connection->query("SELECT * FROM courses WHERE cour_inst='$institution' ",true );
+		$course_list = $_SESSION['query'];
+		
+		$courses = array();
+		$course = array();
+		
+		while($cour_data = mysqli_fetch_array($course_list)){
+			$course['id'] = $cour_data['id']; 
+			$course['code'] = $cour_data['cour_code'];
+			$course['name'] = $cour_data['cour_name'];
+			$courses[] = $course;
+		}
+		
+		if(count($courses) > 0){
+			$respArray = $this->makeResponse("SUCCESS", "Course List successfully generated",  $courses );
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+		}else{
+			$respArray = $this->makeResponse("ERROR","There are no courses currently associated with your institution", "");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+		}
+			
+	}
+	
+	
+	//GET A LIST OF COURSES PRESCRIBED FOR A MAJOR
+	
+	function getMyCourses($institution, $major, $id){
+		
+		$this->connection->query("SELECT * FROM merger WHERE merg_inst='$institution' AND merg_maj='$major'",true);
+		$outline = $_SESSION['query'];
+		
+		$courses = array();
+		while($data = mysqli_fetch_array($outline)){
+			$courses[] = $data['merg_course'];
+		}
+		
+		$new_courses_arr = array();
+		$old_courses_arr = array();
+		
+		foreach($courses as $course){
+			
+			$this->connection->query("SELECT * FROM courses WHERE id='$course'",true);
+			$course_info = $_SESSION['query'];
+			
+			while($dat = mysqli_fetch_array($course_info)){
+				$cData['id'] 		=  $dat['id'];
+				$cData['name'] 		=  $dat['cour_name'];
+				$cData['code'] 		=  $dat['cour_code'];
+				$cData['weight'] 	=  $dat['cour_weight'];
+			}
+			
+			//$course_arr[] =  $cData;
+			//DANGER ZONE!
+			$this->connection->num_rows("SELECT * FROM progress WHERE prog_course='$cData[id]' AND prog_student='$id' AND prog_grade<>'' ", true);
+			$is_excempt = $_SESSION['num_rows'];
+			
+			if($is_excempt == 1){
+				$old_courses_arr[] = $cData;
+			}else{
+				$new_courses_arr[] =  $cData;
+			}
+			
+								
+		}
+		
+		$course_arr = array("done" => $old_courses_arr, "undone" => $new_courses_arr);
+		
+		$respArray = $this->makeResponse("SUCCESS", "" , $course_arr);
+		echo $this->jsoncallback."(".json_encode($respArray).")";	
+		
+		
+		
+	}
+	
+
 /****************************************************************************************************************************************/
 //ADDING STUDENTS WHO PICK COURSES
 
@@ -202,7 +281,28 @@ class CMBasics{
 		//If the user exists, set the required credentials
 		if($numTimes == 1){
 			
-			$respArray = array( "response" => "SUCCESS", "data" => array("message" => "Successfully Authenticated!", "command" => "localStorage.setItem('identification', '".$identification."'); localStorage.setItem('loginKey', '".$loginKey."'); doBasicLoginAuth();"));
+			$this->connection->query("SELECT * FROM students WHERE stud_identification='$identification' AND stud_passkey='$passkey' ",true);
+			$details = $_SESSION['query'];
+			
+			while($detail = mysqli_fetch_array($details)){
+			
+				$command['id'] 			= "localStorage.setItem('id', '".$detail['id']."');"; 
+				$command['inst'] 		= "localStorage.setItem('inst', '".$detail['stud_inst']."');";  
+				$command['name'] 		= "localStorage.setItem('name', '".$detail['stud_name']."');"; 
+				$command['major'] 		= "localStorage.setItem('major', '".$detail['stud_major']."');";  
+				$command['minor'] 		= "localStorage.setItem('minor', '".$detail['stud_minor']."');"; 
+				$command['dept'] 		= "localStorage.setItem('dept', '".$detail['stud_dept']."');";  
+				$command['school'] 		= "localStorage.setItem('school', '".$detail['stud_school']."');"; 
+				$command['country'] 	= "localStorage.setItem('country', '".$detail['stud_country']."');"; 
+				$command['loginKey']	= "localStorage.setItem('loginKey', '".$loginKey."');";
+				$command['identification']	= "localStorage.setItem('identification', '".$identification."');";
+				$command['authenticate']	= "doBasicLoginAuth();";
+			}
+			
+			
+			
+			//$respArray = $this->makeResponse("SUCCESS", "Successfully Authenticated!", "localStorage.setItem('identification', '".$identification."'); localStorage.setItem('loginKey', '".$loginKey."'); doBasicLoginAuth();");
+			$respArray = $this->makeResponse("SUCCESS", "Successfully Authenticated!", $command);
 			echo $this->jsoncallback."(".json_encode($respArray).")";
 			
 		}else{
@@ -214,13 +314,13 @@ class CMBasics{
 			//If the username exists,
 			if($numTimes == 1){
 				
-				$respArray = array("response" => "You have entered an incorrect password!", "data" => "");
+				$respArray = $this->makeResponse( "ERROR", "You have entered an incorrect password!", "data");
 				//Inform them that the password they provided is wrong
 				echo $this->jsoncallback."(".json_encode($respArray).")";
 				
 			}else{
 				
-				$respArray = array("response" => "That identification number is not yet registered!", "data" => "");
+				$respArray = $this->makeResponse( "ERROR", "That identification number is not yet registered!", "data");
 				//Inform them that that username remains unregistered
 				echo $this->jsoncallback."(".json_encode($respArray).")";
 				
@@ -241,17 +341,28 @@ class CMBasics{
 	
 		if( $loginKey === $identification){
 			
-			$respArray = array("response"=>"SUCCESS", "data" => array("message" => "AUTHENTICATED", "command" => "") );				
+			$respArray = $this->makeResponse( "SUCCESS" , "AUTHENTICATED" , "" );				
 			echo $this->jsoncallback."(".json_encode($respArray).")";
 			
 		}else{
 			
-			$respArray = array("response"=>"ERROR", "data" => array("message" => "NO MATCH", "command" => "localStorage.clear(); window.location = 'index.html';") );
+			$respArray = $this->makeResponse( "ERROR" , "NO MATCH" , "localStorage.clear(); window.location = 'index.html';");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
 			
 		}
 		
 	}
+
+
+/****************************************************************************************************************************************/
+//MAKING THE RESPONSE ARRAY
+
+	private function makeResponse($response, $message, $command){
+		
+		return array( "response" => $response, "data" => array( "message" => $message, "command" => $command ) );
+		
+	}
+
 
 /****************************************************************************************************************************************/
 //CUSTOM DEVELOPER TESTING FEATURE
@@ -260,8 +371,23 @@ class CMBasics{
 		
 		
 	}
-	
-	
+
+
+/****************************************************************************************************************************************/
+//Map A major to a course	
+	function mapMajor( $institution, $major, $course ){
+		
+		$this->connection->query("INSERT INTO merger ( merg_inst, merg_maj, merg_course ) VALUES ( '$institution', '$major', '$course' )", true);
+		$result = $_SESSION['query'];
+		
+		if($result){
+			$respArray = $this->makeResponse("SUCCESS"," Course Successfully added! "," ");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+		}else{
+			$respArray = $this->makeResponse("ERROR"," Failed to add course! "," ");
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+		}
+	}
 
 }
 

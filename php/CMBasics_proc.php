@@ -66,6 +66,21 @@ if(@$funcName != ""){
 			$basicVal->addCourseValidate();
 		break;
 		
+		#//Get courses for an institution
+		case "getInstCourses":
+			$basicVal->getInstCoursesValidate();
+		break;
+		
+		#//Fetching a User's courses
+		case "getMyCourses":
+			$basicVal->getMyCoursesValidate();
+		break;
+		
+		#//Mapping major to courses
+		case "mapMajor":
+			$basicVal->mapMajorValidate();
+		break;
+		
 		#//Adding a student
 		case "addStudent":
 			$basicVal->addStudentValidate();

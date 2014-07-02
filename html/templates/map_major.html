@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Add Courses to Major</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/doAuth.js"></script>
+<script>
+
+	doSecureAuth();	
+	
+	$(function(){
+			
+		 $.ajax({
+				
+						url : 'http://localhost/courses/php/CMBasics_proc.php',
+						data: { method:"getInstCourses", institution:localStorage.getItem("inst") },
+						dataType:'jsonp',
+						success: function(courDat){	
+						
+								if(courDat["response"] == "ERROR"){
+									
+								}else if(courDat["response"] == "SUCCESS"){
+									
+									$_courses = courDat["data"]["command"]
+									
+									
+										
+									 $madeList = makeList($_courses);
+										$("#generated").html($madeList);
+										
+									
+								}
+						
+						}
+						
+	 		});
+		
+	});
+
+</script>
+<style>
+
+.id, .code, .name, .tick {
+	padding:5px;;
+}
+
+.id{
+	color:red;
+}
+.code{
+	color:orange;
+	text-transform:uppercase;
+}
+.name{
+	color:green;
+	text-transform:capitalize;
+}
+.tick{
+	color:blue;
+}
+
+</style>
+</head>
+
+<body>
+<div id="result"></div>
+	<table width="99%"  id="generated" >
+      
+    </table>
+
+</body>
+</html>

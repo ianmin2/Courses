@@ -108,14 +108,24 @@ class connection{
 		if(@$status){
 			
 			if(@count($_SESSION['query_error']) > 0){
-				echo $this->jsoncallback."(".json_encode('<error> Device Error: '.@implode("<br />",$_SESSION['query_error'])).")";
+				
+				$err = $_SESSION['query_error'];
 				unset($_SESSION['query_error']); 
-				return;
+				return  array("response" => "ERROR", "data" => array( "message" => '"'.$err.'"', "command" => "" ) );
+				
 			}else{
 				return; 
 			}
 			
 		}
+	}
+	
+	
+	
+	private function makeResponse($response, $message, $command){
+		
+		return array( "response" => $response, "data" => array( "message" => $message, "command" => $command ) );
+		
 	}
 	
 //End of Class	

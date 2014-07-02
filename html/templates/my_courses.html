@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>My Courses</title>
+<script src="js/jquery.min.js"></script>
+<script src="js/doAuth.js"></script>
+<script>
+
+$(function(){
+	
+	 $.ajax({
+				
+						url : 'http://localhost/courses/php/CMBasics_proc.php',
+						data: { method:"getMyCourses", major:localStorage.getItem("major") , institution:localStorage.getItem("inst"), id: localStorage.getItem("id") },
+						dataType:'jsonp',
+						success: function(courDat){	
+						
+							if(courDat["response"] == "SUCCESS"){
+								
+								//Process the data and display it on the screen
+								$my_courses =  getMyCourses(courDat['data']['command']);
+								
+								//console.log($my_courses['undone']);
+								$("#new_courses").html("<table class='new_courses' style='width:100%' ><th><td colspan='4'>REMAINING COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr> " + $my_courses['undone'] + "</table>")
+								$("#old_courses").html("<table class='old_courses' style='width:100%' ><th><td colspan='4'>COMPLETED COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr>  " + $my_courses['done'] + "</table>")
+								//courDat['data']['command']
+								//$("#courses").html()
+								
+							}else if(courDat["response"] == "ERROR"){
+								
+								$("#result").html(courDat['data']['command']);
+								
+							}else{
+								
+								$("#result").html(courDat);
+								
+							}
+						
+						}
+						
+	 });
+	
+});
+
+</script>
+</head>
+
+<body>
+<div id="result"></div>
+<div id="new_courses">
+
+</div>
+<br />
+<br />
+<div id="old_courses">
+
+</div>
+</body>
+</html>

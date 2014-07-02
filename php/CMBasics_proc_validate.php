@@ -3,7 +3,7 @@ class CMBasicsValidation{
 
 	public $id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email, $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $basics, $jsoncallback , $loginKey;
 
-	public $obsfucate;
+	private $obsfucate;
 
 	public function __construct($id, $nom, $country, $institution, $school, $department, $major, $minor, $student, $identification, $passkey, $email,  $google, $yahoo , $live, $facebook, $linkedin, $twitter, $course, $grade, $aim, $comment, $dates, $jsoncallback, $loginKey ){
 
@@ -181,6 +181,18 @@ class CMBasicsValidation{
 		
 	}
 	
+	//Institutional course validation
+	function getInstCoursesValidate(){
+		
+		if(@$this->institution == ""){
+			$respArray = array("response"=>"ERROR", "data" => array("message" => " The Institution is required! ", "command" => ""));
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+		}else{
+			$this->basics->getInstCourses($this->sanitize($this->institution));
+		}
+		
+	}
+	
 	
 	//Student addition validation
 	function addStudentValidate(){
@@ -310,6 +322,35 @@ class CMBasicsValidation{
 			
 			$this->basics->doSecureAuth(@$this->loginKey, @$this->obsfucate->makeKey($this->sanitize( $this->identification )) );
 					
+		}
+		
+	}
+	
+	//Generate a list of all the courses that a user is enrolled to
+	function getMyCoursesValidate(){
+		
+		if(@$this->major != "" && @$this->institution != "" && @$this->id != ""){
+			$this->basics->getMyCourses($this->sanitize($this->institution), $this->sanitize($this->major), $this->sanitize($this->id) );
+		}else{
+			$respArray = array("response"=>"ERROR", "data" => array("message" => " The Major and Institution and Id are required! ", "command" => "doSecureAuth();"));
+			
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
+		}
+		
+	}
+	
+	//Map a course to a major
+	function mapMajorValidate(){
+		
+		if(@$this->major != "" && @$this->course != "" && @$this->institution != ""){
+			$this->basics->mapMajor($this->sanitize($this->institution), $this->sanitize($this->major), $this->sanitize($this->course));
+		}else{
+			
+			$respArray = array("response"=>"ERROR", "data" => array("message" => " The Major, Course and Institution are required! ", "command" => "doSecureAuth();"));
+			
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			
 		}
 		
 	}
