@@ -14,26 +14,26 @@ $(function(){
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"getMyCourses", major:localStorage.getItem("major") , institution:localStorage.getItem("inst"), id: localStorage.getItem("id") },
 						dataType:'jsonp',
-						success: function(courDat){	
+						success: function(resp){	
 						
-							if(courDat["response"] == "SUCCESS"){
+							if(resp["response"] == "SUCCESS"){
 								
 								//Process the data and display it on the screen
-								$my_courses =  getMyCourses(courDat['data']['command']);
+								$my_courses =  getMyCourses(resp['data']['command']);
 								
 								//console.log($my_courses['undone']);
-								$("#new_courses").html("<table class='new_courses' style='width:100%' ><th><td colspan='4'>REMAINING COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr> " + $my_courses['undone'] + "</table>")
-								$("#old_courses").html("<table class='old_courses' style='width:100%' ><th><td colspan='4'>COMPLETED COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr>  " + $my_courses['done'] + "</table>")
+								$("#new_courses").html("<table class='new_courses' style='width:100%' ><th><td colspan='4'>REMAINING COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr> " + $my_courses['undone'] + "</table>");
+								$("#old_courses").html("<table class='old_courses' style='width:100%' ><th><td colspan='4'>COMPLETED COURSES</td></th><tr class='tt'><td>Code</td><td>Title</td><td>Weight</td><td>  &nbsp;</td></tr>  " + $my_courses['done'] + "</table>");
 								//courDat['data']['command']
 								//$("#courses").html()
 								
-							}else if(courDat["response"] == "ERROR"){
+							}else if(resp["response"] == "ERROR"){
 								
-								$("#result").html(courDat['data']['command']);
+								$__command.html(resp['data']['command']);
 								
 							}else{
 								
-								$("#result").html(courDat);
+								$__result.html("UNDEFINED RESPONSE MESSAGE.");
 								
 							}
 						
@@ -46,8 +46,10 @@ $(function(){
 </script>
 </head>
 
-<body>
+<div id="command"></div>
 <div id="result"></div>
+<body>
+
 <div id="new_courses">
 
 </div>
@@ -56,5 +58,6 @@ $(function(){
 <div id="old_courses">
 
 </div>
+
 </body>
 </html>

@@ -14,21 +14,18 @@ $(function(){
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"mapMajor", institution:$_institution, major:$_major, course:$_course },
 						dataType:'jsonp',
-						success: function(resp){	
-						
-							
+						success: function(resp){
 						
 							if(resp["response"] == "SUCCESS" ){
 								$__result.html(resp['data']['message']);
-								$__command.html("<script>" + resp['data']['command'] + "<//script>");																
+								$__command.html("<script>" + resp['data']['command'] + "</script>");																
 							}else if(resp["response"] == "ERROR" ){
 								$__result.html(resp["data"]["message"]);
-								$__command.html("<script>" + resp['data']['command'] + "<//script>");
+								$__command.html("<script>" + resp['data']['command'] + "</script>");
 							}else{
 								$__result.html("UNDEFINED RESPONSE MESSAGE.");
 							}
-								
-								
+							
 						
 						}
 						
@@ -44,10 +41,8 @@ $(function(){
     	return $data.replace(/ /g,"_");
 		
 	}
-
-
-
 	
+		
 	//Basic Authentication to ensure that the security key has been set
 	function doBasicLoginAuth(){
 		
@@ -77,29 +72,29 @@ $(function(){
 			
 		
 		 $.ajax({
-			 
-							url : 'http://localhost/courses/php/CMBasics_proc.php',
-							data: { method:'doSecureAuth', loginKey : $__loginKey, identification : $__identification  },
-							dataType:'jsonp',
-							success: function(resp){
-															
-								//If the user's credentials are correct, set a unique identification Key  to authenticate the user.					
-								if(resp["response"] == "SUCCESS"){
-										
-									$__command.html( "<script>" + resp["data"]["command"] + "<//script>" );
-																								
-								}else{
-									
-									$__command.html( "<script>" + resp["data"]["command"] + "<//script>" );
-									
-								}
+	 
+					url : 'http://localhost/courses/php/CMBasics_proc.php',
+					data: { method:'doSecureAuth', loginKey : $__loginKey, identification : $__identification  },
+					dataType:'jsonp',
+					success: function(resp){
+													
+						//If the user's credentials are correct, set a unique identification Key  to authenticate the user.					
+						if(resp["response"] == "SUCCESS"){
 								
-								
-						
-							}
-					
+							$__command.html( "<script>" + resp["data"]["command"] + "</script>" );
+																						
+						}else{
 							
-					 });	
+							$__command.html( "<script>" + resp["data"]["command"] + "</script>" );
+							
+						}
+						
+						
+						
+					}
+			
+							
+			});	
 		
 	}
 
@@ -136,16 +131,19 @@ $(function(){
 		$d_course = "";
 		$u_course = "";
 		
+		
 		//make a list of the undone courses.
 		for($_course in $__undone){
-			
-			$u_course = $u_course + " <tr id='"+ noSpace($__undone[$_course]['name']) +"'> <td class='c_code'>" + $__undone[$_course]['code'] + "</td> <td class='c_name' >" + $__undone[$_course]['name'] + "</td> <td class='c_weight'>" + $__undone[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick='javascript:addGrade(" + $__undone[$_course]['id']  + ");' > Edit </button> </td> </tr> ";
+			$u_course = $u_course + " <tr id='"+ noSpace($__undone[$_course]['name']) +"'> <td class='c_code'>" + $__undone[$_course]['code'] + "</td> <td class='c_name' >" + $__undone[$_course]['name'] + "</td> <td class='c_weight'>" + $__undone[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick='javascript:updateProgress(" + $__undone[$_course]['id']  +  ");' > Edit </button> </td> </tr> ";
 			
 		}
 		
 		for($_course in $__done){
 			
-			$d_course = $d_course + " <tr id='"+ noSpace($__done[$_course]['name']) +"'> <td class='c_code'>" + $__done[$_course]['code'] + "</td> <td class='c_name' >" + $__done[$_course]['name'] + "</td> <td class='c_weight'>" + $__done[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick='javascript:addGrade(" + $__done[$_course]['id']  + ");' > Edit </button> </td> </tr> ";
+			$prep_arr = Array();
+			$prep_arr['command'] = "window.localStorage.setItem('curr_course', "+   $__done[$_course]['name'] + " );";
+			
+			$d_course = $d_course + " <tr id='"+ noSpace($__done[$_course]['name']) +"'> <td class='c_code'>" + $__done[$_course]['code'] + "</td> <td class='c_name' >" + $__done[$_course]['name'] + "</td> <td class='c_weight'>" + $__done[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick=' updateProgress(" + $__done[$_course]['id']  + ");' > Edit </button> </td> </tr> ";
 			
 		}
 		
@@ -155,25 +153,85 @@ $(function(){
 		$_results_["undone"] 	= $u_course;
 		
 		return $_results_;
+		//console.log($_results_)
 		
 		
 	}
 	
 	
-	function addGrade($courseId){
+	function updateProgress($courseId){
 		
-		/* $.ajax({
+		$.ajax({
 			 
 							url : 'http://localhost/courses/php/CMBasics_proc.php',
-							data: { method:'doSecureAuth', loginKey : $__loginKey, identification : $__identification  },
+							data: { method:'getCourseById', id : $courseId , identification :localStorage.getItem('id') },
 							dataType:'jsonp',
-							success: function(lresp){
-								
+							success: function(resp){
+								console.log(resp)
+								if(resp["response"] == "SUCCESS"){
+									
+									$__result.html('');
+									$('body').html('<div id="cours_data"> <div id="c_grade"></div> <br><br> <div id="c_aim"></div> <br><br> <div id="c_comment"></div> <div id="btn"></div></div>');
+									
+									//alert(resp['data']['message'][0]['prog_grade']);
+									
+									/*
+									if(resp['data']['message'][0]['prog_grade'] == "" || resp['data']['message'][0]['prog_grade'] == 0){
+										$gVal = "ENTER A GRADE "
+									}else{
+										 $gVal = resp['data']['message'][0]['prog_grade'];
+									}
+									*/
+									$c_id 		= resp['data']['message'][0]['id']
+									$c_grade 	= resp['data']['message'][0]['prog_grade']
+									$c_aim		= resp['data']['message'][0]['prog_aim']
+									$c_comment 	= resp['data']['message'][0]['prog_comment']
+									
+									
+									$grade 		= '<input id="grade" value="'+ $c_grade +'" placeholder=" ACTUAL GRADE "> ';
+									$aim		= '<input id="aim" value="' + $c_aim + '" placeholder= "EXPECTED GRADE" >';
+									$comment 	= '<textarea id="comment" maxlength="50"> ' + $c_comment + ' </textarea>';
+									
+									$btn 		= '<button id="update"> UPDATE </button>';
+									
+									$("#c_grade").html($grade);
+									$("#c_aim").html($aim);
+									$("#c_comment").html($comment);
+									$("#btn").html($btn);
+									
+																		
+									$("#update").click(function(e) {
+                                        
+										$.ajax({
+											url : 'http://localhost/courses/php/CMBasics_proc.php',
+											data: { method:'updateProgress', id : $c_id , student:localStorage.getItem('id'), course:$courseId, grade: $("#grade").val(), aim: $("#aim").val(), comment: $("#comment").val()  },
+											dataType:'jsonp',
+											success: function(resp){
+												
+												alert(resp['data']['message']);
+												
+											}
+										});
+										
+                                    });
+									
+									
+									
+									//console.log(resp['data']['message']);
+									
+									
+									
+								}else if(resp["response"] == "ERROR"){
+									$__result.html(resp['data']['message']);
+									$__command.html("<script>" + resp['data']['command'] + "</script>");
+								}else{
+									$__result.html("UNDEFINED RESPONSE MESSAGE.");
+								}
 								
 							}
 							
 		 });
-		 */
+		 
 		
 	}
 		

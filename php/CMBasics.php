@@ -115,9 +115,9 @@ class CMBasics{
 /****************************************************************************************************************************************/
 //ADDING COURSES TO A MAJOR?MINOR
 
-	function addCourse( $nom, $department, $institution, $course){
+	function addCourse( $nom, $department, $institution, $course, $grade){
 
-		$this->connection->aQuery("INSERT INTO courses (cour_name, cour_dept, cour_inst, cour_code) VALUES ('$nom', '$department', '$institution', '$course')",false,"Course Successfully Added","Failed to add course!<br>It already exists", "");
+		$this->connection->aQuery("INSERT INTO courses (cour_name, cour_dept, cour_inst, cour_code, cour_weight) VALUES ('$nom', '$department', '$institution', '$course', '$grade')",false,"Course Successfully Added","Failed to add course!<br>It already exists", "");
 			
 	}
 
@@ -199,6 +199,38 @@ class CMBasics{
 		
 	}
 	
+	
+	//FETCH A COURSE BY ID
+	
+	function getCourseById( $id, $identification ){
+		
+		//check if this course has been loged in the progress db table by the given student
+		//if not, create an instance of it in the table 
+		//otherwise/then fetch the currently available deatils
+		//get the users' modified data 
+		//update the database with the given info
+		
+		$this->connection->num_rows("SELECT * FROM progress WHERE prog_course='$id' AND prog_student='$identification' LIMIT 1", false);
+		$num_logs = $_SESSION['num_rows'];
+		
+		if($num_logs == 1){
+			$this->connection->printQueryResults( "SELECT * FROM progress WHERE prog_course='$id' AND prog_student='$identification' ", false );
+		}else{
+			
+			$this->connection->query("INSERT INTO progress ( prog_course, prog_student ) VALUES ( '$id', '$identification' )",false);
+			$isInserted = $_SESSION['query'];
+			
+			if($isInserted){
+				$this->connection->printQueryResults( "SELECT * FROM progress WHERE prog_course='$id' AND prog_student='$identification' ", false );
+			}else{
+				$respArray = $this->makeResponse("ERROR"," COURSE STACK ERROR ", "");
+				echo $this->jsoncallback."(".json_encode($respArray).")";
+			}
+			
+		}
+		
+	}
+	
 
 /****************************************************************************************************************************************/
 //ADDING STUDENTS WHO PICK COURSES
@@ -253,21 +285,23 @@ class CMBasics{
 /****************************************************************************************************************************************/
 //ADDING THE PROGRESS OF STUDENTS THAT PICK COURSES
 
-	function addProgress( $student, $course, $grade, $aim, $comment, $dates){
+	function addProgress( $student, $course, $grade, $aim, $comment){
 
-		if($grade == ""){$grade = "NG";}if($aim == ""){$aim = "ND";}
+		if($grade == ""){$grade = "NG";}if($aim == ""){$aim = "NA";}
 
-		$this->connection->aQuery("INSERT INTO progress (prog_student, prog_course, prog_grade, prog_aim, prog_comment, prog_date) VALUES ('$student', '$course', '$grade', '$aim', '$comment', '$dates')",false,"Progress data Successfully added","Failed to add progress data!", "");
+		$this->connection->aQuery("INSERT INTO progress (prog_student, prog_course, prog_grade, prog_aim, prog_comment ) VALUES ('$student', '$course', '$grade', '$aim', '$comment') ",false,"Progress data Successfully added","Failed to add progress data!", "");
 		
 	}
 
 //UPDATING THE STUDENT COURSE PROGRESS
 
-	function updateProgress( $id, $student, $course, $grade, $aim, $comment, $dates){
+	function updateProgress( $id, $student, $course, $grade, $aim, $comment){
 
-		$this->connection->aQuery("UPDATE progress SET prog_course='$course', prog_grade='$grade', prog_aim='$aim', prog_comment='$comment', prog_date='$dates' WHERE id='$id' AND prog_student='$student'",false,"Student progress data Successfully updated","Failed to update Student progress data!", "");
+		$this->connection->aQuery("UPDATE progress SET prog_grade='$grade', prog_aim='$aim', prog_comment='$comment'  WHERE id='$id' AND prog_student='$student' AND prog_course='$course' ",false,"Student progress data Successfully updated","Failed to update Student progress data!", "");
 		
 	}
+	
+
 
 /****************************************************************************************************************************************/
 //LOGING IN A USER

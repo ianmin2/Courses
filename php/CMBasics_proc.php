@@ -76,6 +76,11 @@ if(@$funcName != ""){
 			$basicVal->getMyCoursesValidate();
 		break;
 		
+		#//Fetch A course for progress editing
+		case "getCourseById":
+			$basicVal->getCourseByIdValidate();
+		break;
+		
 		#//Mapping major to courses
 		case "mapMajor":
 			$basicVal->mapMajorValidate();
