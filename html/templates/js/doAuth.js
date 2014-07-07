@@ -1,6 +1,7 @@
 $(function(){
 	$__result 			= $("#result");
-	$__command			= $("#command"); 	
+	$__command			= $("#command"); 
+	//$("head").append("<link rel='stylesheet' href='style/style.css' >");	
 });
 
 
@@ -13,6 +14,38 @@ $(function(){
 				
 						url : 'http://localhost/courses/php/CMBasics_proc.php',
 						data: { method:"mapMajor", institution:$_institution, major:$_major, course:$_course },
+						dataType:'jsonp',
+						success: function(resp){
+						
+							if(resp["response"] == "SUCCESS" ){
+								$__result.html(resp['data']['message']);
+								$__command.html("<script>" + resp['data']['command'] + "</script>");																
+							}else if(resp["response"] == "ERROR" ){
+								$__result.html(resp["data"]["message"]);
+								$__command.html("<script>" + resp['data']['command'] + "</script>");
+							}else{
+								$__result.html("UNDEFINED RESPONSE MESSAGE.");
+							}
+							
+						
+						}
+						
+			 });
+			
+		}
+		
+		
+		
+		
+		function unmapMajor($_course){
+		
+			$_institution = localStorage.getItem("inst");
+			$_major		  = localStorage.getItem("major");
+			
+				 $.ajax({
+				
+						url : 'http://localhost/courses/php/CMBasics_proc.php',
+						data: { method:"unmapMajor", institution:$_institution, major:$_major, course:$_course },
 						dataType:'jsonp',
 						success: function(resp){
 						
@@ -108,7 +141,7 @@ $(function(){
 		
 			$identy = noSpace($data[$dat]['name'] + $data[$dat]['code']);
 			
-			$_out = $_out + " <tr id='" + $identy +"' > <td class='id'> " + $data[$dat]['id'] + "</td> <td class='code'> " +  $data[$dat]['code'] + "</td>  <td class='name'> " + $data[$dat]['name'] + "</td>  <td id='tick'> <input type='submit' onClick='javascript:mapMajor("+ $data[$dat]['id'] + ")' value='add' ></td></tr> <tr><td colspan='4'><hr></td></tr>";
+			$_out = $_out + " <tr id='" + $identy +"' > <td class='id'> " + $data[$dat]['id'] + "</td> <td class='code'> " +  $data[$dat]['code'] + "</td>  <td class='name'> " + $data[$dat]['name'] + "</td>  <td id='tick'> <input type='submit' onClick='javascript:mapMajor("+ $data[$dat]['id'] + ")' value='+' > <input type='submit' onClick='javascript:unmapMajor("+ $data[$dat]['id'] + ")' value='-' ></td></tr> <tr><td colspan='4'><hr></td></tr>";
 			
 		}
 		
@@ -134,7 +167,7 @@ $(function(){
 		
 		//make a list of the undone courses.
 		for($_course in $__undone){
-			$u_course = $u_course + " <tr id='"+ noSpace($__undone[$_course]['name']) +"'> <td class='c_code'>" + $__undone[$_course]['code'] + "</td> <td class='c_name' >" + $__undone[$_course]['name'] + "</td> <td class='c_weight'>" + $__undone[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick='javascript:updateProgress(" + $__undone[$_course]['id']  +  ");' > Edit </button> </td> </tr> ";
+			$u_course = $u_course + " <tr id='"+ noSpace($__undone[$_course]['name']) +"'> <td class='c_code'>" + $__undone[$_course]['code'] + "</td> <td class='c_name' >" + $__undone[$_course]['name'] + "</td> <td class='c_weight'>" + $__undone[$_course]['weight'] + "</td> <td class='c_grade'>  <button onClick='javascript:updateProgress(" + $__undone[$_course]['id']  + ");' > Edit </button> </td> </tr> ";
 			
 		}
 		

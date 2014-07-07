@@ -141,9 +141,11 @@ class CMBasics{
 		if(count($courses) > 0){
 			$respArray = $this->makeResponse("SUCCESS", $courses , "" );
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$respArray = $this->makeResponse("ERROR","There are no courses currently associated with your institution", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}
 			
 	}
@@ -166,7 +168,7 @@ class CMBasics{
 		
 		foreach($courses as $course){
 			
-			$this->connection->query("SELECT * FROM courses WHERE id='$course'",true);
+			$this->connection->query("SELECT id, cour_name, cour_code,cour_weight FROM courses WHERE id='$course' LIMIT 1",true);
 			$course_info = $_SESSION['query'];
 			
 			while($dat = mysqli_fetch_array($course_info)){
@@ -193,7 +195,8 @@ class CMBasics{
 		$course_arr = array("done" => $old_courses_arr, "undone" => $new_courses_arr);
 		
 		$respArray = $this->makeResponse("SUCCESS", "" , $course_arr);
-		echo $this->jsoncallback."(".json_encode($respArray).")";	
+		echo $this->jsoncallback."(".json_encode($respArray).")";
+		exit;	
 		
 		
 		
@@ -225,6 +228,7 @@ class CMBasics{
 			}else{
 				$respArray = $this->makeResponse("ERROR"," COURSE STACK ERROR ", "");
 				echo $this->jsoncallback."(".json_encode($respArray).")";
+				exit;
 			}
 			
 		}
@@ -237,7 +241,7 @@ class CMBasics{
 
 	function addStudent( $nom, $institution, $major, $minor, $identification, $email, $passkey, $google, $yahoo, $live, $facebook, $linkedin, $twitter, $department, $school, $country){
 
-		$this->connection->aQuery("INSERT INTO students (stud_name, stud_inst, stud_major, stud_minor, stud_identification, stud_email, stud_passkey, stud_google, stud_yahoo, stud_live, stud_facebook, stud_linkedin, stud_twitter, stud_dept, stud_school, stud_country) VALUES ('$nom', '$institution', '$major', '$minor', '$identification', '$email', '$passkey', '$google', '$yahoo', '$live', '$facebook', '$linkedin', '$twitter', '$department', '$school', '$country' )",false,"User Successfully Added","Failed to add user! <br> user already exists", "");
+		$this->connection->aQuery("INSERT INTO students (stud_name, stud_inst, stud_major, stud_minor, stud_identification, stud_email, stud_passkey, stud_google, stud_yahoo, stud_live, stud_facebook, stud_linkedin, stud_twitter, stud_dept, stud_school, stud_country) VALUES ('$nom', '$institution', '$major', '$minor', '$identification', '$email', '$passkey', '$google', '$yahoo', '$live', '$facebook', '$linkedin', '$twitter', '$department', '$school', '$country' )",false,"User Successfully Added","Failed to add user! <br> user already exists", "window.location='do_Login.html';");
 		
 	}
 
@@ -338,6 +342,7 @@ class CMBasics{
 			//$respArray = $this->makeResponse("SUCCESS", "Successfully Authenticated!", "localStorage.setItem('identification', '".$identification."'); localStorage.setItem('loginKey', '".$loginKey."'); doBasicLoginAuth();");
 			$respArray = $this->makeResponse("SUCCESS", "Successfully Authenticated!", $command);
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}else{
 			
@@ -351,12 +356,14 @@ class CMBasics{
 				$respArray = $this->makeResponse( "ERROR", "You have entered an incorrect password!", "data");
 				//Inform them that the password they provided is wrong
 				echo $this->jsoncallback."(".json_encode($respArray).")";
+				exit;
 				
 			}else{
 				
 				$respArray = $this->makeResponse( "ERROR", "That identification number is not yet registered!", "data");
 				//Inform them that that username remains unregistered
 				echo $this->jsoncallback."(".json_encode($respArray).")";
+				exit;
 				
 			}
 			
@@ -377,11 +384,13 @@ class CMBasics{
 			
 			$respArray = $this->makeResponse( "SUCCESS" , "AUTHENTICATED" , "" );				
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}else{
 			
 			$respArray = $this->makeResponse( "ERROR" , "NO MATCH" , "localStorage.clear(); window.location = 'index.html';");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}
 		
@@ -416,7 +425,20 @@ class CMBasics{
 		
 	}
 
+
+//unmap A major from a course	
+	function unmapMajor( $institution, $major, $course ){
+		
+		$this->connection->aQuery("DELETE FROM merger WHERE merg_inst='$institution' AND merg_maj='$major' AND merg_course='$course' ", true, "Course Successfully unmapped!", "Failed to unmap course! ", ""); 
+				
+	}
+
+
 }
+
+
+
+
 
 //CREATING AN INSTANCE OF THE CLASS
 //$basics = new CMBasics($_REQUEST['callback']);

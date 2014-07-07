@@ -9,10 +9,10 @@
 @session_start;
 
 date_default_timezone_set("Africa/Nairobi");
-$this_site = "http://127.0.0.1/courses/";
+$this_site = "http://tumaini.tk/tests/courses";
 
-$db = 'courses'; $host = 'localhost'; $user = 'root'; 
-$pass = '146450f7';
+$db = 'u644087195_cmate'; $host = 'mysql.0hosting.org'; $user = 'u644087195_cmate'; 
+$pass = 'iarasoft';
 
 /*End of database connection variable declaration*/
 if (@$jsoncallback == ""){$jsoncallback = $_REQUEST['callback'];}

@@ -7,7 +7,7 @@
 <script src="js/doAuth.js"></script>
 <script>
 	
-	doBasicLoginAuth();
+	
 
 	$(function(){
 		
@@ -37,12 +37,12 @@
 																		
 								}
 								
-								$__command.html("<script>" + $com + "<//script>");
+								$__command.html("<script>" + $com + "");
 																						
 							}else{
 								
 								
-								$__command.html("<script>" + logiDat["data"]["command"] + "<//script>");
+								$__command.html("<script>" + alert(resp["data"]["message"]) + "");
 								
 							}
 							

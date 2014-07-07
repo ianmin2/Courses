@@ -197,9 +197,11 @@ IARA_MAILER;
 		if(curl_exec($ch)){
 			$respArray = makeResponse("SUCCESS", "Message Sent", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$respArray = makeResponse("ERROR", "Error: Failed to sending message!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}
 				
 	}

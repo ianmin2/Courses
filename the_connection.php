@@ -86,11 +86,13 @@ class connection{
 			
 			$respArray = makeResponse( "SUCCESS", $success , $command);
 			echo  $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}else{
 			
 			$respArray = makeResponse( "ERROR", $failure , $command);
 			echo  $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		} 
 		
@@ -117,7 +119,8 @@ class connection{
 		}
 		
 		$respArray = makeResponse( "SUCCESS", $elements , "");
-		echo  $this->jsoncallback."(".json_encode($respArray).")";		
+		echo  $this->jsoncallback."(".json_encode($respArray).")";
+		exit;		
 		
 	}
 	

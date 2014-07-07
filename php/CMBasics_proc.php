@@ -6,7 +6,8 @@ $funcName = @$_REQUEST['method'];
 if(@$_REQUEST['email'] != ""){
 	
 	if(!filter_var($_REQUEST['email'], FILTER_VALIDATE_EMAIL)){
-		echo $_REQUEST['callback'].'('.json_encode("That email is invalid!<br />").')';
+		$respArray = array("response" => "ERROR", "data" => array("message" => "That email is invalid!", "command" => "$('#emol').focus();"));
+		echo $_REQUEST['callback'].'('.json_encode($respArray).')';
 		die;
 	}
 	
@@ -86,6 +87,11 @@ if(@$funcName != ""){
 			$basicVal->mapMajorValidate();
 		break;
 		
+		#//unMapping a major to courses
+		case "unmapMajor":
+			$basicVal->unmapMajorValidate();
+		break;
+		
 		#//Adding a student
 		case "addStudent":
 			$basicVal->addStudentValidate();
@@ -123,7 +129,9 @@ if(@$funcName != ""){
 		
 		#//Handling the "method not found error"
 		default:
-			echo $_REQUEST['callback'].'('.json_encode("Failed to understand the given command.<br />").')';
+			$respArray = array("response" => "ERROR", "data" => array("message" => "Failed to understand the given command.", "command" => ""));
+			echo $_REQUEST['callback'].'('.json_encode($respArray).')';
+			exit;
 		break;
 		
 	}	

@@ -41,7 +41,7 @@ class CMBasicsValidation{
 			
 				if(@$this->identification == ""){
 					echo $this->jsoncallback."(".json_encode("You need to provide a username in order to gain access to the desired service!").")";
-					die;
+					exit;
 				}
 			
 			$key 	=	"E|es/+r_qtTZd-kEQCDP5(74Z!*,rmD+z`-S ,Wa|zFb&ks21`Wc}f$.MO|4S|F_!".htmlspecialchars($this->identification).".|}KXz=AT_+RrC3$.Hn0}`xUIGqVYgUbIUrS/ylnhh/jAB3-q^a09L|`#^7W9~2VX/";
@@ -71,7 +71,8 @@ class CMBasicsValidation{
 		
 		if(@$this->nom == "" | @$this->country == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
-			echo $this->jsoncallback."(".json_encode($respArray).")";	
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;	
 		}else{
 			$this->basics->addInstitution($this->sanitize($this->nom), $this->sanitize($this->country));
 		}
@@ -83,7 +84,8 @@ class CMBasicsValidation{
 	function getInstitutionValidate(){
 		if($this->country == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
-			echo $this->jsoncallback."(".json_encode($respArray).")";		
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;		
 		}else{
 			$this->basics->getInstitution($this->country);
 		}
@@ -106,6 +108,7 @@ class CMBasicsValidation{
 		if(@$this->nom == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->addSchool($this->sanitize($this->nom), $this->sanitize($this->institution));
 		}
@@ -119,6 +122,7 @@ class CMBasicsValidation{
 		if(@$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," PLEASE SELECT AN INSTITUTION! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->getSchools($this->sanitize($this->institution));
 		}
@@ -132,6 +136,7 @@ class CMBasicsValidation{
 		if(@$this->nom == "" |  @$this->school == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->addDepartment($this->sanitize($this->nom), $this->sanitize($this->school), $this->sanitize($this->institution));
 		}	
@@ -145,6 +150,7 @@ class CMBasicsValidation{
 		if( @$this->school == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->getDepartments( $this->sanitize($this->institution), $this->sanitize($this->school) );
 		}	
@@ -158,6 +164,7 @@ class CMBasicsValidation{
 		if(@$this->nom == "" | @$this->department == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->addMajor($this->sanitize($this->nom), $this->sanitize($this->department), $this->sanitize($this->institution));
 		}	
@@ -171,6 +178,7 @@ class CMBasicsValidation{
 		if( @$this->department == "" | @$this->institution == "" ){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->getMajors( $this->sanitize($this->department), $this->sanitize($this->institution) );
 		}	
@@ -184,6 +192,7 @@ class CMBasicsValidation{
 		if(@$this->nom == "" | @$this->department == "" | @$this->institution == "" | @$this->course == "" | @$this->grade == "" ){
 			$respArray = $this->makeResponse("ERROR"," ALL FIELDS ARE REQUIRED! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->addCourse($this->sanitize($this->nom), $this->sanitize($this->department), $this->sanitize($this->institution), $this->sanitize($this->course), $this->sanitize($this->grade));
 		}	
@@ -196,6 +205,7 @@ class CMBasicsValidation{
 		if(@$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR"," The Institution is required! ","");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->getInstCourses($this->sanitize($this->institution));
 		}
@@ -211,6 +221,7 @@ class CMBasicsValidation{
 		}else{
 			$respArray = $this->makeResponse("ERROR", "The Basic Program Blocks seem corrupt. Please Logout then login.", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}	 
 		 
 	}
@@ -222,6 +233,7 @@ class CMBasicsValidation{
 		if(@$this->nom == "" | @$this->institution == "" | @$this->major == "" | @$this->identification == "" | @$this->email == "" | @$this->department =="" | @$this->school == "" | @$this->country == "" | (@$this->passkey == ""  && @$this->google == "" && @$this->yahoo == "" && @$this->live == "" && @$this->facebook == "" && @$this->linkedin == "" && @$this->twitter == "" ) ){
 			$respArray = $this->makeResponse("ERROR", "Essential fields and a form of identification are required!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 						
 			$this->basics->addStudent($this->sanitize($this->nom), $this->sanitize($this->institution), $this->sanitize($this->major), @$this->sanitize($this->minor), $this->sanitize($this->identification), $this->sanitize($this->email), @$this->obsfucate->makePass($this->sanitize($this->passkey)), @$this->sanitize($this->google), @$this->sanitize($this->yahoo), @$this->sanitize($this->live),  @$this->sanitize($this->facebook),  @$this->sanitize($this->linkedin), @$this->sanitize($this->twitter), @$this->sanitize($this->department), @$this->sanitize($this->school), @$this->sanitize($this->country));
@@ -235,6 +247,7 @@ class CMBasicsValidation{
 		if(@$this->institution == "" | @$this->identification == "" | @$this->passkey == ""){
 			$respArray = $this->makeResponse("ERROR", "FAILED TO IDENTIFY USER BASED ON GIVEN CRITERIA!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->updateStudent($this->sanitize($this->nom), $this->sanitize($this->institution), $this->sanitize($this->major), $this->sanitize($this->minor), $this->sanitize($this->identification), $this->obsfucate->makePass($this->sanitize($this->passkey)), $this->sanitize($this->google), $this->sanitize($this->yahoo), $this->sanitize($this->live), $this->sanitize($this->facebook),  $this->sanitize($this->linkedin), $this->sanitize($this->twitter), @$this->sanitize($this->department), @$this->sanitize($this->school), @$this->sanitize($this->country));
 		}
@@ -248,7 +261,7 @@ class CMBasicsValidation{
 		if(@$this->major == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR", "Both the major and institution are required!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
-			
+			exit;
 		}else{
 			
 			$this->basics->getStudentByMajor( $this->sanitize($this->major), $this->sanitize($this->institution) );
@@ -262,6 +275,7 @@ class CMBasicsValidation{
 		if(@$this->department == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR", "Both the department and institution are required!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			
 			$this->basics->getStudentByDepartment( $this->sanitize($this->department), $this->sanitize($this->institution) );
@@ -275,6 +289,7 @@ class CMBasicsValidation{
 		if(@$this->school == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR", "Both the school and institution are required!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			
 			$this->basics->getStudentBySchool( $this->sanitize($this->school), $this->sanitize($this->institution) );
@@ -288,6 +303,7 @@ class CMBasicsValidation{
 		if(@$this->country == "" | @$this->institution == ""){
 			$respArray = $this->makeResponse("ERROR", "Both the country and institution are required!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			
 			$this->basics->getStudentByInstitution( $this->sanitize($this->institution), $this->sanitize($this->country) );
@@ -305,6 +321,7 @@ class CMBasicsValidation{
 		if(@$this->student == "" | @$this->course == "" | @$this->grade == "" ){
 			$respArray = $this->makeResponse("ERROR", "FAILED TO ADD PROGRESS BASED ON THE GIVEN CRITERIA!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->addProgress($this->sanitize($this->student), $this->sanitize($this->course), $this->sanitize($this->grade), $this->sanitize($this->aim), $this->sanitize($this->comment), $this->sanitize($this->dates));
 		}	
@@ -318,6 +335,7 @@ class CMBasicsValidation{
 		if(@$this->id == "" | @$this->student == "" | @$this->course == ""){
 			$respArray = $this->makeResponse("ERROR", "ALL FIELDS ARE REQUIRED!", "");
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			$this->basics->updateProgress($this->sanitize($this->id), $this->sanitize($this->student), $this->sanitize($this->course), $this->sanitize($this->grade), $this->sanitize($this->aim), $this->sanitize($this->comment));
 		}	
@@ -331,6 +349,7 @@ class CMBasicsValidation{
 		if(@$this->identification == "" | @$this->passkey == ""){	
 			$respArray = $this->makeResponse("ERROR", "Your Username and Password are required to complete this task.", "");		
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 		}else{
 			
 			$this->basics->doPasskeyLogin(@$this->sanitize($this->identification) , @$this->obsfucate->makePass($this->sanitize($this->passkey)), $this->obsfucate->makeKey($this->sanitize($this->identification)) );
@@ -349,6 +368,7 @@ class CMBasicsValidation{
 			$respArray = $this->makeResponse("ERROR", "You need to login to access this service ", "localStorage.clear(); window.location='index.html'; ");
 			
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}else{
 			
@@ -367,6 +387,7 @@ class CMBasicsValidation{
 			$respArray = $this->makeResponse("ERROR"," The Major and Institution and Id are required! ", "doSecureAuth();");
 			
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}
 		
@@ -382,6 +403,23 @@ class CMBasicsValidation{
 			$respArray = $this->makeResponse("ERROR", " The Major, Course and Institution are required! ", "doSecureAuth();");
 			
 			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
+			
+		}
+		
+	}
+	
+	//unmap a course from a major
+	function unmapMajorValidate(){
+		
+		if(@$this->major != "" && @$this->course != "" && @$this->institution != ""){
+			$this->basics->unmapMajor($this->sanitize($this->institution), $this->sanitize($this->major), $this->sanitize($this->course));
+		}else{
+			
+			$respArray = $this->makeResponse("ERROR", " The Major, Course and Institution are required! ", "doSecureAuth();");
+			
+			echo $this->jsoncallback."(".json_encode($respArray).")";
+			exit;
 			
 		}
 		

@@ -1,0 +1,23 @@
+@charset "utf-8";
+/* CSS Document */
+
+.c_code, .c_name, .c_weight, .c_grade {
+	width:25% !important;
+	overflow-style:marquee-block !important;
+	border-bottom:#666 solid 2px;
+}
+
+#new_courses, #old_courses{
+	width:100%;
+}
+
+@media only screen and (min-width:150px) and (max-width:500px){
+	
+	.c_code, .c_name, .c_weight, .c_grade {
+	width:50% !important;
+	float:right;
+	overflow-style:auto;
+	
+}
+	
+}

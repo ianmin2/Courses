@@ -29,8 +29,8 @@ $(function(){
 								
 							}else if(resp["response"] == "ERROR"){
 								
-								$__command.html(resp['data']['command']);
-								
+								$__command.html( "<script>" + resp['data']['command'] );
+																
 							}else{
 								
 								$__result.html("UNDEFINED RESPONSE MESSAGE.");
@@ -53,8 +53,7 @@ $(function(){
 <div id="new_courses">
 
 </div>
-<br />
-<br />
+
 <div id="old_courses">
 
 </div>
