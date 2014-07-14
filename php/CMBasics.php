@@ -196,7 +196,8 @@ class CMBasics{
 		
 		$new_courses_arr = array();
 		$old_courses_arr = array();
-		
+		$grades = array();
+		$sub_grade = array();
 		foreach($courses as $course){
 			
 			$this->connection->query("SELECT id, cour_name, cour_code,cour_weight FROM courses WHERE id='$course' LIMIT 1",true);
@@ -238,22 +239,18 @@ class CMBasics{
 		
 		foreach($old_courses_arr as $done_course){
 			
-			//$pr = $old_courses_arr[$done_course['id']];
-			//echo $pr;
-			print_r($done_course);
-			exit;
+			$pr = $done_course['id'];
 			
 			$this->connection->query("SELECT * FROM progress WHERE prog_course='".$pr."' AND  prog_student='$id' ", true); 
 			$cour_dat = $_SESSION['query'];
 			
-			$grades = array();
-			$sub_grade = array();
+			
 			
 			while($da = mysqli_fetch_array($cour_dat)){
-				$sub_grade['prog_course'] = $da["prog_course"];
-				$sub_grade['prog_grade'] = $da["prog_grade"];
-				$sub_grade['prog_aim'] = $da["prog_aim"];
-				$sub_grade['prog_date'] = $da["prog_date"];
+				$sub_grade['id'] = $da["prog_course"];
+				$sub_grade['grade'] = $da["prog_grade"];
+				$sub_grade['aim'] = $da["prog_aim"];
+				$sub_grade['dat'] = $da["prog_date"];
 			}
 			
 			$grades[] = $sub_grade;
