@@ -102,6 +102,40 @@ class CMBasicsValidation{
 	}
 	
 	
+	//Add an institution to the grading table
+	function startGradingValidate(){
+		
+		if($this->institution != "" || $this->country != ""){
+			$this->basics->startGrading($this->sanitize($this->institution), $this->sanitize($this->country)); 
+		}else{
+			$respArray = $this->makeResponse("ERROR","FAILED TO ACQUIRE INSTITUTION NAME!","");
+			echo $this->jsoncallback."(".json_encode($respArray).")";	
+		}
+		
+	}
+	
+	
+	//Set up an institution's grading system
+	function setGradingValidate($ap,$a,$am,$bp,$b,$bm,$cp,$c,$cm,$dp,$d,$dm,$e,$f){
+		
+		if($this->institution != ""){
+			$this->basics->setGrading($this->sanitize($this->institution),$this->sanitize($ap),$this->sanitize($a),$this->sanitize($am),$this->sanitize($bp),$this->sanitize($b),$this->sanitize($bm),$this->sanitize($cp),$this->sanitize($c),$this->sanitize($cm),$this->sanitize($dp),$this->sanitize($d),$this->sanitize($dm),$this->sanitize($e),$this->sanitize($f)); 	
+		}else{
+			$respArray = $this->makeResponse("ERROR","FAILED TO ACQUIRE INSTITUTION NAME!","");
+			echo $this->jsoncallback."(".json_encode($respArray).")";	
+		}
+		
+	}
+	//Fetch the detailed institutional grading system
+	function loadGradesValidate(){
+		if($this->institution != ""){
+			$this->basics->loadGrades($this->sanitize($this->institution));
+		}else{
+			echo $this->jsoncallback."(".json_encode($this->makeResponse("ERROR","You need to be loged in to access this service!","")).")";
+		}
+	}
+	
+	
 	//School addition validation
 	function addSchoolValidate(){
 		

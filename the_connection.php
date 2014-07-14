@@ -77,20 +77,20 @@ class connection{
 		
 	}
 	
-	public function aQuery($statement, $stops, $success, $failure, $command ){  
+	public function aQuery($statement, $stops, $success, $failure, $scommand, $fcommand ){  
 	
 		$_SESSION['query'] = mysqli_query($this->con,"$statement")or $this->die_on_err($stops);
 		
 		if($_SESSION['query']){
 			
 			
-			$respArray = makeResponse( "SUCCESS", $success , $command);
+			$respArray = makeResponse( "SUCCESS", $success , $scommand);
 			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			exit;
 			
 		}else{
 			
-			$respArray = makeResponse( "ERROR", $failure , $command);
+			$respArray = makeResponse( "ERROR", $failure , $fcommand);
 			echo  $this->jsoncallback."(".json_encode($respArray).")";
 			exit;
 			

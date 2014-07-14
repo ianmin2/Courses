@@ -31,6 +31,21 @@ if(@$funcName != ""){
 			$basicVal->getInstitutionValidate();
 		break;
 		
+		#//Add an institution to the grading table
+		case "startGrading":
+			$basicVal->startGradingValidate();
+		break;
+		
+		#//Set up an institution's grading criteria
+		case "setGrading":
+			$basicVal->setGradingValidate(@$_REQUEST['ap'], @$_REQUEST['a'], @$_REQUEST['am'], @$_REQUEST['bp'], @$_REQUEST['b'], @$_REQUEST['bm'], @$_REQUEST['cp'], @$_REQUEST['c'], @$_REQUEST['cm'], @$_REQUEST['dp'], @$_REQUEST['d'], @$_REQUEST['dm'], @$_REQUEST['e'], @$_REQUEST['f']);
+		break;
+		
+		#//Get a list of the pre-defined institution grading system
+		case "loadGrades":
+			$basicVal->loadGradesValidate();
+		break;
+		
 		#//Adding a school
 		case "addSchool":
 			$basicVal->addSchoolValidate();
