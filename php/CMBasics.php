@@ -61,7 +61,7 @@ class CMBasics{
 		
 		while($thin = mysqli_fetch_array($thi)){
 			$inst_id = $thin['id'];
-			$this->connection->aQuery("INSERT INTO grades (grade_inst) VALUES ('$inst_id')", true, "Successfully initialised the institution's Grading", "Failed to set institution's grading", "", "startGrading('$inst');");
+			$this->connection->aQuery("INSERT INTO grades (grade_inst, ap, a, am, bp, b, bm, cp, c, cm, dp, d, dm ) VALUES ('$inst_id', 4, 4, 3.7, 3.33, 3, 2.7, 2.3, 2 , 1.7, 1.3, 1, 0.7)", true, "Successfully initialised the institution's Grading", "Failed to set institution's grading", "", "startGrading('$inst');");
 		}
 		
 		
@@ -486,7 +486,7 @@ class CMBasics{
 //Map A major to a course	
 	function mapMajor( $institution, $major, $course ){
 		
-		$this->connection->aQuery("INSERT INTO merger ( merg_inst, merg_maj, merg_course ) VALUES ( '$institution', '$major', '$course' )", false, "Course Successfully mapped!", "Failed to map course! \n\rThat course is already mapped! ", "", "");
+		$this->connection->aQuery("INSERT INTO merger ( merg_inst, merg_maj, merg_course ) VALUES ( '$institution', '$major', '$course' )", true, "Course Successfully mapped!", "Failed to map course! \n\rThat course is already mapped! ", "", "");
 		
 		
 	}

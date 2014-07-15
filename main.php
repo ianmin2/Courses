@@ -9,10 +9,12 @@
 @session_start;
 
 date_default_timezone_set("Africa/Nairobi");
-$this_site = "127.0.0.1/courses";
+//the complete site path
+$this_site = "";
 
-$db = 'courses'; $host = 'localhost'; $user = 'root'; 
-$pass = '146450f7';
+//database login credentials
+$db = ''; $host = ''; $user = ''; 
+$pass = '';
 
 /*End of database connection variable declaration*/
 if (@$jsoncallback == ""){$jsoncallback = $_REQUEST['callback'];}
