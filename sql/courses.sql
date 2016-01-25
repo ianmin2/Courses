@@ -21,7 +21,6 @@ CREATE TABLE `students` (
   `stud_linkedin` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-TRUNCATE TABLE `students`;
 INSERT INTO `students` (`id`, `stud_name`, `stud_inst`, `stud_major`, `stud_minor`, `stud_identification`, `stud_passkey`, `stud_country`, `stud_school`, `stud_email`, `stud_dept`, `stud_twitter`, `stud_google`, `stud_yahoo`, `stud_live`, `stud_facebook`, `stud_linkedin`) VALUES
 (1, 'IAN INNOCENT MBAE', 1, 1, 0, 'SKAMIA1321', 'rpWoZFyoj9aliZqH', 112, 1, 'ianmin2@live.com', 1, '', '', '', '', '', '');
 
