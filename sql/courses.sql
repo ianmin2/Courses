@@ -122,6 +122,20 @@ CREATE TABLE IF NOT EXISTS `progress` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `merger`
+--
+
+CREATE TABLE IF NOT EXISTS `merger` (
+  `id` bigint(255) NOT NULL AUTO_INCREMENT,
+  `merg_inst` bigint(255) NOT NULL,
+  `merg_maj` bigint(255) NOT NULL,
+  `merg_course` bigint(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `school`
 --
 
